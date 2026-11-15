@@ -39,8 +39,9 @@ section[data-testid="stSidebar"] input { color: #1F2A37 !important; }
 .chip { display: inline-block; background: rgba(245,241,234,0.14); border: 1px solid rgba(245,241,234,0.35);
         border-radius: 999px; padding: 3px 12px; font-size: 0.78rem; margin-right: 6px; margin-bottom: 10px;
         font-family: 'IBM Plex Mono', monospace; }
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 .tarjeta { background: #FFFDF9; border: 1px solid #E4DCCD; border-radius: 16px; padding: 16px 18px;
-           border-top: 6px solid var(--c); min-height: 205px; }
+           border-top: 6px solid var(--c); }
 .tarjeta .t { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: #6B6455; }
 .tarjeta .v { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 700; color: var(--c); line-height: 1.15; margin-top: 4px; }
 .tarjeta .s { font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: #3F3A31; margin-top: 4px; }
@@ -61,12 +62,12 @@ def es(v, d=2):
     return s.replace(",", "§").replace(".", ",").replace("§", ".")
 
 
-def tarjeta(col, titulo, valor, sub, color, sello=None, clase="neutro"):
+def tarjeta(titulo, valor, sub, color, sello=None, clase="neutro"):
     html = (f'<div class="tarjeta" style="--c:{color}"><div class="t">{titulo}</div>'
             f'<div class="v">{valor}</div><div class="s">{sub}</div>')
     if sello:
         html += f'<span class="sello {clase}">{sello}</span>'
-    col.markdown(html + "</div>", unsafe_allow_html=True)
+    return html + "</div>"
 
 
 def estilo(fig, alto=420):
@@ -153,28 +154,29 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-c1, c2, c3, c4 = st.columns(4)
+tarjetas = []
 if orig_def:
     cumple_o = m.T(x0) <= umbral
-    tarjeta(c1, f"Versión original · x = {es(x0, 1)} mil", f"{es(m.T(x0))} s",
+    tarjetas.append(tarjeta(f"Versión original · x = {es(x0, 1)} mil", f"{es(m.T(x0))} s",
             f"T'(x) = {es(m.T_der(x0))} s por mil usuarios", ORIG,
             "Cumple la promesa" if cumple_o else f"No cumple {es(umbral, 1)} s",
-            "ok" if cumple_o else "mal")
+            "ok" if cumple_o else "mal"))
 else:
-    tarjeta(c1, f"Versión original · x = {es(x0, 1)} mil", "No definida",
-            "x ≤ 4: el modelo da tiempos negativos o infinitos", ORIG, "Fuera del dominio", "mal")
+    tarjetas.append(tarjeta(f"Versión original · x = {es(x0, 1)} mil", "No definida",
+            "x ≤ 4: el modelo da tiempos negativos o infinitos", ORIG, "Fuera del dominio", "mal"))
 cumple_n = m.Ts(x0) <= umbral
-tarjeta(c2, f"Versión nueva · x = {es(x0, 1)} mil", f"{es(m.Ts(x0), 3)} s",
+tarjetas.append(tarjeta(f"Versión nueva · x = {es(x0, 1)} mil", f"{es(m.Ts(x0), 3)} s",
         f"T*'(x) = {es(m.Ts_der(x0), 3)} s por mil usuarios", NUEVA,
         "Cumple la promesa" if cumple_n else f"No cumple {es(umbral, 1)} s",
-        "ok" if cumple_n else "mal")
-tarjeta(c3, f"Usuarios · semana {es(t0, 1)}", f"{es(xt)} mil",
+        "ok" if cumple_n else "mal"))
+tarjetas.append(tarjeta(f"Usuarios · semana {es(t0, 1)}", f"{es(xt)} mil",
         f"x'(t) = {es(ritmo_t)} mil por semana", USU,
-        "Antes del pico" if t0 < m.T_INFLEXION else "Después del pico", "neutro")
-tarjeta(c4, f"Servidores óptimos · k = {k}", f"n = {mejor}",
+        "Antes del pico" if t0 < m.T_INFLEXION else "Después del pico", "neutro"))
+tarjetas.append(tarjeta(f"Servidores óptimos · k = {k}", f"n = {mejor}",
         f"C = {es(m.costo(mejor, k), 1)} mil $ al mes", COSTO,
         "Coincide con n elegido" if n0 == mejor else f"Elegido: n = {n0}",
-        "ok" if n0 == mejor else "neutro")
+        "ok" if n0 == mejor else "neutro"))
+st.markdown('<div class="rejilla">' + "".join(tarjetas) + "</div>", unsafe_allow_html=True)
 
 st.write("")
 tab1, tab2, tab3, tab4, tab5 = st.tabs(
