@@ -6,7 +6,7 @@ Integrantes: Jhonathan Mayorga y Andrés Morales (Equipo B – Análisis), Herna
 
 ## Qué hace
 
-Aplicación en Python (Streamlit, SymPy, Matplotlib) que permite cambiar el parámetro k, los usuarios conectados x,
+Aplicación en Python (Streamlit, SymPy y Plotly) que permite cambiar el parámetro k, los usuarios conectados x,
 la semana t, el número de servidores n y el umbral de la promesa comercial, y muestra:
 
 1. El tiempo de respuesta de la versión original T(x) y de la nueva T*(x), con sus derivadas.
