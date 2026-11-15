@@ -283,6 +283,24 @@ with tab3:
         "Como n debe ser entero, se comparan los vecinos: " +
         " · ".join(f"C({v}) = {es(m.costo(v, k), 1)}" for v in vecinos) +
         f". Gana **n = {mejor}**. Con los n = {n0} elegidos, el costo es {es(m.costo(n0, k), 1)} mil pesos.")
+    kc = np.linspace(1, 100, 400)
+    kk = np.arange(1, 101)
+    fig2 = go.Figure()
+    fig2.add_trace(go.Scatter(x=kc, y=[m.n_optimo_continuo(v) for v in kc], name="n* = √(40 + 5k/3)",
+                              line=dict(color=NUEVA, dash="dash", width=2.5)))
+    fig2.add_trace(go.Scatter(x=kk, y=[m.mejor_n(int(v)) for v in kk], name="entero de menor costo",
+                              line=dict(color=TINTA, width=2.5, shape="hvh")))
+    fig2.add_trace(go.Scatter(x=[k], y=[mejor], mode="markers+text", name=f"k elegido = {k}",
+                              text=[f"k = {k} → n = {mejor}"],
+                              textposition="top right" if k < 70 else "top left",
+                              marker=dict(size=13, color=COSTO, line=dict(color=TINTA, width=1))))
+    fig2.update_layout(title="Servidores óptimos según k")
+    fig2.update_xaxes(title_text="parámetro k")
+    fig2.update_yaxes(title_text="servidores", dtick=1)
+    st.plotly_chart(estilo(fig2, 380), width="stretch")
+    st.markdown(
+        "**¿Qué pasa si sube k?** n* crece como una raíz cuadrada: si k se duplica, los servidores no se duplican. "
+        "Con k = 5 conviene 7, con k = 10 conviene 8 y con k = 20 conviene 9.")
 
 # ------------------------------------------------------------ 4. veredicto
 with tab4:
