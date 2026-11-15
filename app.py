@@ -195,7 +195,7 @@ with tab1:
     fig.add_hline(y=umbral, line_dash="dash", line_color="#8A8170", row=1, col=1,
                   annotation_text=f"promesa {es(umbral, 1)} s", annotation_position="top right")
     fig.add_vline(x=4, line_dash="dot", line_color=ORIG, row=1, col=1)
-    fig.add_trace(go.Scatter(x=[4], y=[2], mode="markers", name="hueco: T*(4) = 2",
+    fig.add_trace(go.Scatter(x=[4], y=[2], mode="markers", name="discontinuidad removible: T*(4) = 2",
                              marker=dict(size=11, color="#FFFDF9", line=dict(color=NUEVA, width=2.5))), 1, 1)
     # rectas tangentes en x0: la derivada como pendiente
     h = np.linspace(x0 - 1.2, x0 + 1.2, 20)
@@ -221,7 +221,7 @@ with tab1:
             f"**{es(m.Ts_der(x0), 3)} s**. La línea punteada es la tangente: su pendiente es la derivada.")
     st.markdown(
         "<p class='nota'>La original tiene asíntota vertical en x = 4 y nunca baja de 5 s. "
-        "La nueva tiene un hueco en x = 4 que se corrige con T*(4) = 2 s, y allí T*'(4) = −0,25 s por mil usuarios.</p>",
+        "La nueva tiene una discontinuidad removible en x = 4 (límite igual a 2), que se elimina definiendo T*(4) = 2 s, y allí T*'(4) = −0,25 s por mil usuarios.</p>",
         unsafe_allow_html=True)
 
 # ------------------------------------------------------------ 2. usuarios
